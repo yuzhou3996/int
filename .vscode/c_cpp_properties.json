@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "Linux",
+            "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/bsp/beep",
@@ -10,6 +10,7 @@
                 "${workspaceFolder}/bsp/gpio",
                 "${workspaceFolder}/bsp/key",
                 "${workspaceFolder}/bsp/led",
+                "${workspaceFolder}/bsp/int",
                 "${workspaceFolder}/imx6ull",
                 "${workspaceFolder}/project"
             ],
