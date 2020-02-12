@@ -6,13 +6,14 @@ LD				:= $(CROSS_COMPILE)ld
 OBJCOPY 		:= $(CROSS_COMPILE)objcopy
 OBJDUMP 		:= $(CROSS_COMPILE)objdump
 
-INCDIRS 		:= imx6ull \
+INCDIRS 		:= imx6ul \
 				   bsp/clk \
 				   bsp/led \
 				   bsp/delay  \
 				   bsp/beep \
 				   bsp/gpio \
 				   bsp/key \
+				   bsp/exit \
 				   bsp/int
 				   			   
 SRCDIRS			:= project \
@@ -22,6 +23,7 @@ SRCDIRS			:= project \
 				   bsp/beep \
 				   bsp/gpio \
 				   bsp/key \
+				   bsp/exit \
 				   bsp/int
 				   
 				   
@@ -37,20 +39,20 @@ SOBJS			:= $(patsubst %, obj/%, $(SFILENDIR:.S=.o))
 COBJS			:= $(patsubst %, obj/%, $(CFILENDIR:.c=.o))
 OBJS			:= $(SOBJS) $(COBJS)
 
-VPATH			:= $(SRCDIRS)							#设置全局路径
+VPATH			:= $(SRCDIRS)
 
 .PHONY: clean
 	
 $(TARGET).bin : $(OBJS)
-	$(LD) -T imx6ull.lds $^ -o $(TARGET).elf 			#链接文件
-	$(OBJCOPY) -O binary -S  $(TARGET).elf $@ 			#生成二进制文件
-	$(OBJDUMP) -D -m arm $(TARGET).elf > $(TARGET).dis	#生成反汇编文件
+	$(LD) -Timx6ul.lds -o $(TARGET).elf $^
+	$(OBJCOPY) -O binary -S $(TARGET).elf $@
+	$(OBJDUMP) -D -m arm $(TARGET).elf > $(TARGET).dis
 
 $(SOBJS) : obj/%.o : %.S
-	$(CC) -Wall -nostdlib -c -O2  $(INCLUDE) $< -o $@ 	#只编译不链接
+	$(CC) -Wall -nostdlib -c -O2  $(INCLUDE) -o $@ $<
 
 $(COBJS) : obj/%.o : %.c
-	$(CC) -Wall -nostdlib -c -O2  $(INCLUDE) $< -o $@ 	#只编译不链接
+	$(CC) -Wall -nostdlib -c -O2  $(INCLUDE) -o $@ $<
 	
 clean:
 	rm -rf $(TARGET).elf $(TARGET).dis $(TARGET).bin $(COBJS) $(SOBJS)
