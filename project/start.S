@@ -31,7 +31,6 @@ Reset_Handler:
     mcr     p15, 0, r0, c1, c0, 0     /* 将r0寄存器中的值写入到CP15的C1寄存器中	 				*/
 
 	
-@ #if 0
 	/* 汇编版本设置中断向量表偏移 */
 	ldr r0, =0X87800000
 	dsb
@@ -39,7 +38,6 @@ Reset_Handler:
 	mcr p15, 0, r0, c12, c0, 0
 	dsb
 	isb
-@ #endif
     
 	/* 设置各个模式下的栈指针，
 	 * 注意：IMX6UL的堆栈是向下增长的！
@@ -105,8 +103,8 @@ IRQ_Handler:
 
 	mrc p15, 4, r1, c15, c0, 0 /* 读取CP15的CBAR寄存器到r1 CBAR寄存器保存了GIC控制器的寄存器的首地址*/
 
-	add r1, r1, #0X2000			/* 获取GIC的CPU接口端基地址 */
-	ldr r0, [r1, #0XC]			/* 获取GICC_IAR寄存器的值，确定发生中断的中断号，确定要调用的中断函数 */ 
+	add r1, r1, #0x2000			/* 获取GIC的CPU接口端基地址 */
+	ldr r0, [r1, #0xC]			/* 获取GICC_IAR寄存器的值，确定发生中断的中断号，确定要调用的中断函数 */ 
 	push {r0, r1}				/* 保存r0,r1 用于给C语言函数传参*/
 	
 	cps #0x13					/* 进入SVC模式，允许其他中断再次进去 */
@@ -118,7 +116,7 @@ IRQ_Handler:
 	pop {lr}					/* 执行完C语言中断服务函数，lr出栈 */
 	cps #0x12					/* 进入IRQ模式 */
 	pop {r0, r1}				
-	str r0, [r1, #0X10]			/* 中断执行完成，将GICC_IAR寄存器的值写入EOIR寄存器 */
+	str r0, [r1, #0x10]			/* 中断执行完成，将GICC_IAR寄存器的值写入EOIR寄存器 */
 
 	pop {r0}						
 	msr spsr_cxsf, r0			/* 恢复spsr */
